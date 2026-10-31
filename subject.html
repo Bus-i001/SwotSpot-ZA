@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Subject | SwotSpot ZA</title>
+<meta name="description" content="Browse free study guides, mind maps and worksheets by subject on SwotSpot ZA.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site"><div class="wrap">
+<a class="logo" href="index.html">Swot<span>Spot</span> ZA</a>
+<nav><a href="index.html#caps">CAPS</a><a href="index.html#ieb">IEB</a><a href="about.html">About</a><a href="contact.html">Contact</a></nav>
+</div></header>
+
+<main class="wrap">
+<p class="crumbs"><a href="index.html">Home</a> / <span id="crumb">Subject</span></p>
+<h1 id="title">Subject</h1>
+<p><span class="tag" id="ctag"></span></p>
+<div id="lists"></div>
+<noscript><p class="empty">Please turn on JavaScript to see the topic list.</p></noscript>
+
+<!-- AD SLOT: paste your AdSense unit here after approval -->
+<div class="ad-slot"><span class="ad-label">Advertisement</span></div>
+</main>
+
+<footer class="site"><div class="wrap">
+<p><a href="about.html">About</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms</a></p>
+<p>SwotSpot ZA is an independent study site. It is not affiliated with the Department of Basic Education or the IEB.</p>
+</div></footer>
+
+<script src="topics-data.js"></script>
+<script>
+(function () {
+  var q = new URLSearchParams(location.search);
+  var c = q.get('c') === 'ieb' ? 'ieb' : 'caps';
+  var s = (q.get('s') || '').replace(/[^a-z0-9-]/g, '');
+  var name = q.get('n') || 'Subject';
+  var first = q.get('g') === '9' ? '9' : '8';
+  var second = first === '8' ? '9' : '8';
+  var label = c.toUpperCase();
+
+  document.title = 'Grade 8 and 9 ' + name + ' (' + label + ') | SwotSpot ZA';
+  document.getElementById('title').textContent = name + ' (' + label + ')';
+  document.getElementById('crumb').textContent = name + ' ' + label;
+  var tag = document.getElementById('ctag');
+  tag.textContent = label;
+  tag.className = 'tag ' + c;
+
+  var box = document.getElementById('lists');
+  [first, second].forEach(function (g) {
+    var h = document.createElement('h2');
+    h.textContent = 'Grade ' + g;
+    box.appendChild(h);
+    var list = (window.TOPICS || {})[c + '-' + s + '-' + g] || [];
+    if (!list.length) {
+      var p = document.createElement('p');
+      p.className = 'empty';
+      p.textContent = 'Topics for Grade ' + g + ' are coming soon. Check back shortly.';
+      box.appendChild(p);
+      return;
+    }
+    var ul = document.createElement('ul');
+    ul.className = 'topic-list';
+    list.forEach(function (t) {
+      var li = document.createElement('li');
+      var a = document.createElement('a');
+      a.href = t.url;
+      a.textContent = t.title;
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    box.appendChild(ul);
+  });
+})();
+</script>
+<script src="site.js" defer></script>
+</body>
+</html>
