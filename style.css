@@ -43,3 +43,13 @@ nav a:hover{color:#fff}
 footer.site{margin-top:3rem;padding:1.5rem 0;background:var(--ink);color:#c8d4ee;font-size:.9rem}
 footer.site a{color:#fff;margin-right:1rem}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+#cookie-banner{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--ink);color:#fff;padding:1rem 1.1rem calc(1rem + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 20px rgba(0,0,0,.25);font-size:.95rem}
+#cookie-banner p{margin:0 0 .8rem;max-width:42rem}
+#cookie-banner a{color:var(--sun)}
+.cookie-buttons{display:flex;gap:.6rem}
+#cookie-banner button{font:inherit;font-weight:700;border:0;border-radius:8px;padding:.6rem 1.2rem;cursor:pointer;background:var(--sun);color:var(--ink)}
+#cookie-banner button.decline{background:transparent;color:#fff;border:2px solid #fff}
+.topic-list{list-style:none;padding:0;margin:.8rem 0}
+.topic-list a{display:block;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:.8rem 1rem;margin-bottom:.5rem;font-weight:700;text-decoration:none;color:var(--ink)}
+.topic-list a:hover{border-color:var(--blue)}
+.empty{color:var(--muted);background:var(--paper);border:1px dashed var(--line);border-radius:10px;padding:1rem}
