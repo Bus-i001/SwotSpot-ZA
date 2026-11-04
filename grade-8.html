@@ -21,6 +21,13 @@
 <h1>Grade 8</h1>
 <p>Choose your curriculum and subject. New topics are added all the time, so check back often.</p>
 
+<section class="search">
+<form role="search" onsubmit="return false">
+<input type="search" id="q" data-grade="8" placeholder="Search Grade 8 topics, e.g. atlas, scale" aria-label="Search Grade 8 topics" autocomplete="off">
+</form>
+<div id="results" class="results" aria-live="polite"></div>
+</section>
+
 <section class="panel caps">
 <h2><span class="tag caps">CAPS</span> Grade 8 subjects</h2>
 <ul class="chips">
@@ -47,6 +54,8 @@
 <p><a href="about.html">About</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms</a></p>
 <p>SwotSpot ZA is an independent study site. It is not affiliated with the Department of Basic Education or the IEB.</p>
 </div></footer>
+<script src="topics-data.js"></script>
+<script src="search.js" defer></script>
 <script src="site.js" defer></script>
 </body>
   </html>
