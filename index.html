@@ -23,6 +23,13 @@
 <a class="btn" href="#grades">Choose your grade</a>
 </section>
 
+<section class="search">
+<form role="search" onsubmit="return false">
+<input type="search" id="q" placeholder="Search topics, e.g. atlas, scale, fractions" aria-label="Search topics" autocomplete="off">
+</form>
+<div id="results" class="results" aria-live="polite"></div>
+</section>
+
 <section id="grades">
 <h2>Pick your grade</h2>
 <div class="grades"><a href="grade-8.html">Grade 8</a><a href="grade-9.html">Grade 9</a></div>
@@ -56,6 +63,8 @@
 <p><a href="about.html">About</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms</a></p>
 <p>SwotSpot ZA is an independent study site. It is not affiliated with the Department of Basic Education or the IEB.</p>
 </div></footer>
+<script src="topics-data.js"></script>
+<script src="search.js" defer></script>
 <script src="site.js" defer></script>
 </body>
-  </html>
+</html>
