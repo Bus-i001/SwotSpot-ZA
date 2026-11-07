@@ -4,11 +4,19 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>SwotSpot ZA | Free Grade 8 and 9 Study Guides, Mind Maps and Worksheets</title>
-<meta name="description" content="Free Grade 8 and 9 study guides, mind maps and worksheets for CAPS and IEB learners in South Africa.">
+<meta name="description" content="Free Grade 8 and 9 study guides, mind maps, worksheets and memos for CAPS and IEB learners in South Africa. Download digital or print versions.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+.notice{background:var(--ink);color:#fff;border-radius:14px;padding:1rem 1.2rem;margin:0 0 1.2rem;border-left:6px solid var(--sun)}
+.notice strong{color:var(--sun)}
+.features{display:grid;gap:.8rem;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin:1rem 0}
+.feature{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:1rem}
+.feature h3{margin:0 0 .3rem}
+.feature p{margin:0;color:var(--muted);font-size:.95rem}
+</style>
 </head>
 <body>
 <header class="site"><div class="wrap">
@@ -23,6 +31,10 @@
 <a class="btn" href="#grades">Choose your grade</a>
 </section>
 
+<div class="notice">
+<strong>Free downloads:</strong> every topic has downloadable notes, mind maps, worksheets and memos. Pick the digital version for your phone or the print version to print at home or school.
+</div>
+
 <section class="search">
 <form role="search" onsubmit="return false">
 <input type="search" id="q" placeholder="Search topics, e.g. atlas, scale, fractions" aria-label="Search topics" autocomplete="off">
@@ -35,8 +47,23 @@
 <div class="grades"><a href="grade-8.html">Grade 8</a><a href="grade-9.html">Grade 9</a></div>
 </section>
 
+<section>
+<h2>What you can download</h2>
+<div class="features">
+<div class="feature"><h3>Notes</h3><p>Short, clear study notes with a summary and key terms.</p></div>
+<div class="feature"><h3>Mind maps</h3><p>One-page visual summaries that are quick to revise.</p></div>
+<div class="feature"><h3>Worksheets</h3><p>Practice questions to test what you have learned.</p></div>
+<div class="feature"><h3>Memos</h3><p>Answers so you can mark your own work.</p></div>
+</div>
+</section>
+
 <!-- AD SLOT 1: paste your AdSense unit here after approval -->
 <div class="ad-slot"><span class="ad-label">Advertisement</span></div>
+
+<section>
+<h2>Latest topics</h2>
+<div id="latest" class="results"></div>
+</section>
 
 <section id="caps" class="panel caps">
 <h2>CAPS subjects</h2>
@@ -63,8 +90,56 @@
 <p><a href="about.html">About</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms</a></p>
 <p>SwotSpot ZA is an independent study site. It is not affiliated with the Department of Basic Education or the IEB.</p>
 </div></footer>
+
 <script src="topics-data.js"></script>
+<script>
+(function () {
+  var box = document.getElementById('latest');
+  if (!box) return;
+  var data = window.TOPICS || {};
+  var count = 0;
+  Object.keys(data).forEach(function (key) {
+    var p = key.split('-');
+    var c = p[0].toUpperCase();
+    var g = p[p.length - 1];
+    var subject = p.slice(1, -1).map(function (w) {
+      return w.charAt(0).toUpperCase() + w.slice(1);
+    }).join(' ');
+    data[key].forEach(function (t) {
+      count++;
+      var a = document.createElement('a');
+      a.className = 'result';
+      a.href = t.url;
+      if (t.image) {
+        var img = document.createElement('img');
+        img.src = t.image;
+        img.alt = 'Mind map: ' + t.title;
+        img.loading = 'lazy';
+        a.appendChild(img);
+      }
+      var body = document.createElement('div');
+      body.className = 'r-body';
+      var title = document.createElement('span');
+      title.className = 'r-title';
+      title.textContent = t.title;
+      var tags = document.createElement('span');
+      tags.className = 'r-tags';
+      tags.textContent = 'Grade ' + g + ' ' + subject + ' (' + c + ')';
+      body.appendChild(title);
+      body.appendChild(tags);
+      a.appendChild(body);
+      box.appendChild(a);
+    });
+  });
+  if (!count) {
+    var p = document.createElement('p');
+    p.className = 'empty';
+    p.textContent = 'New topics are coming soon.';
+    box.appendChild(p);
+  }
+})();
+</script>
 <script src="search.js" defer></script>
 <script src="site.js" defer></script>
 </body>
-</html>
+  </html>
