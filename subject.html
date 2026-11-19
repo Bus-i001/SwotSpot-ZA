@@ -9,17 +9,29 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+.grade-switch{display:flex;gap:.6rem;margin:1rem 0}
+.grade-switch button{flex:1;font:inherit;font-weight:800;font-size:1.1rem;padding:.8rem 1rem;border-radius:12px;border:2px solid var(--ink);background:var(--paper);color:var(--ink);cursor:pointer}
+.grade-switch button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.grade-switch button:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+</style>
 </head>
 <body>
 <header class="site"><div class="wrap">
 <a class="logo" href="index.html">Swot<span>Spot</span> ZA</a>
-<nav><a href="index.html#caps">CAPS</a><a href="index.html#ieb">IEB</a><a href="about.html">About</a><a href="contact.html">Contact</a></nav>
+<nav></nav>
 </div></header>
 
 <main class="wrap">
-<p class="crumbs"><a href="index.html">Home</a> / <span id="crumb">Subject</span></p>
+<p class="crumbs"><a href="index.html">Home</a> / <a id="gradelink" href="resources.html">Resources</a> / <span id="crumb">Subject</span></p>
 <h1 id="title">Subject</h1>
-<p><span class="tag" id="ctag"></span></p>
+<p><span class="tag" id="ctag"></span><span class="tag" id="gtag"></span></p>
+
+<div class="grade-switch" role="group" aria-label="Choose a grade">
+<button type="button" id="b8" aria-pressed="false">Grade 8</button>
+<button type="button" id="b9" aria-pressed="false">Grade 9</button>
+</div>
+
 <div id="lists"></div>
 <noscript><p class="empty">Please turn on JavaScript to see the topic list.</p></noscript>
 
@@ -39,27 +51,32 @@
   var c = q.get('c') === 'ieb' ? 'ieb' : 'caps';
   var s = (q.get('s') || '').replace(/[^a-z0-9-]/g, '');
   var name = q.get('n') || 'Subject';
-  var first = q.get('g') === '9' ? '9' : '8';
-  var second = first === '8' ? '9' : '8';
+  var grade = q.get('g') === '9' ? '9' : '8';
   var label = c.toUpperCase();
 
-  document.title = 'Grade 8 and 9 ' + name + ' (' + label + ') | SwotSpot ZA';
-  document.getElementById('title').textContent = name + ' (' + label + ')';
-  document.getElementById('crumb').textContent = name + ' ' + label;
-  var tag = document.getElementById('ctag');
-  tag.textContent = label;
-  tag.className = 'tag ' + c;
-
   var box = document.getElementById('lists');
-  [first, second].forEach(function (g) {
-    var h = document.createElement('h2');
-    h.textContent = 'Grade ' + g;
-    box.appendChild(h);
-    var list = (window.TOPICS || {})[c + '-' + s + '-' + g] || [];
+  var b8 = document.getElementById('b8');
+  var b9 = document.getElementById('b9');
+
+  document.getElementById('ctag').textContent = label;
+  document.getElementById('ctag').className = 'tag ' + c;
+  document.getElementById('crumb').textContent = name + ' ' + label;
+
+  function render() {
+    document.title = 'Grade ' + grade + ' ' + name + ' (' + label + ') | SwotSpot ZA';
+    document.getElementById('title').textContent = 'Grade ' + grade + ' ' + name + ' (' + label + ')';
+    document.getElementById('gtag').textContent = 'Grade ' + grade;
+    document.getElementById('gradelink').href = 'grade-' + grade + '.html';
+    document.getElementById('gradelink').textContent = 'Grade ' + grade;
+    b8.setAttribute('aria-pressed', grade === '8' ? 'true' : 'false');
+    b9.setAttribute('aria-pressed', grade === '9' ? 'true' : 'false');
+
+    box.textContent = '';
+    var list = (window.TOPICS || {})[c + '-' + s + '-' + grade] || [];
     if (!list.length) {
       var p = document.createElement('p');
       p.className = 'empty';
-      p.textContent = 'Topics for Grade ' + g + ' are coming soon. Check back shortly.';
+      p.textContent = 'Grade ' + grade + ' ' + name + ' topics are coming soon. Check back shortly.';
       box.appendChild(p);
       return;
     }
@@ -74,9 +91,20 @@
       ul.appendChild(li);
     });
     box.appendChild(ul);
-  });
+  }
+
+  function choose(g) {
+    grade = g;
+    q.set('g', g);
+    try { history.replaceState(null, '', location.pathname + '?' + q.toString()); } catch (e) {}
+    render();
+  }
+
+  b8.onclick = function () { choose('8'); };
+  b9.onclick = function () { choose('9'); };
+  render();
 })();
 </script>
 <script src="site.js" defer></script>
 </body>
-</html>
+  </html>
