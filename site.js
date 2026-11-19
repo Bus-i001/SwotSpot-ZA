@@ -1,5 +1,20 @@
 (function () {
-  var base = location.pathname.indexOf('/topics/') > -1 ? '../' : '';
+  var deep = /\/(topics|articles)\//.test(location.pathname);
+  var base = deep ? '../' : '';
+
+  /* 0. Main menu, the same on every page */
+  var nav = document.querySelector('header.site nav');
+  if (nav) {
+    nav.innerHTML =
+      '<a href="' + base + 'index.html">Home</a>' +
+      '<a href="' + base + 'resources.html">Resources</a>' +
+      '<a href="' + base + 'articles.html">Articles</a>' +
+      '<a href="' + base + 'articles/how-to-find-a-good-tutor.html">Find a Tutor</a>' +
+      '<a href="' + base + 'about.html">About</a>';
+  }
+  var navStyle = document.createElement('style');
+  navStyle.textContent = 'header.site nav{display:flex;flex-wrap:wrap;gap:.2rem .9rem}header.site nav a{margin-left:0}';
+  document.head.appendChild(navStyle);
 
   /* 1. Make the subject buttons clickable */
   var m = location.pathname.match(/grade-(\d)\.html/);
