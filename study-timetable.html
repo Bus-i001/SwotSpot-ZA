@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Study Timetable Generator | SwotSpot ZA</title>
+<meta name="description" content="Make a free weekly study timetable in seconds. Enter your subjects, choose your study days and times, then print it or save it as a PDF.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.tool label{display:block;font-weight:700;margin:1rem 0 .3rem}
+.tool input[type="text"],.tool input[type="number"],.tool input[type="time"],.tool textarea{width:100%;font:inherit;padding:.7rem .9rem;border:2px solid var(--ink);border-radius:10px;background:var(--paper);color:var(--ink)}
+.tool .row{display:grid;gap:.8rem;grid-template-columns:1fr 1fr}
+.tool .days{display:flex;flex-wrap:wrap;gap:.5rem}
+.tool .days label{display:flex;align-items:center;gap:.4rem;margin:0;font-weight:600;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:.4rem .7rem}
+.tool button.btn{border:0;font:inherit;font-weight:700;cursor:pointer;margin-top:1.2rem}
+.hint{color:var(--muted);font-size:.9rem;margin:.2rem 0 0}
+.tablewrap{overflow-x:auto;margin:1rem 0}
+.tablewrap table{border-collapse:collapse;width:100%;min-width:480px;background:var(--paper)}
+.tablewrap th,.tablewrap td{border:1px solid var(--line);padding:.5rem .7rem;text-align:left;font-size:.95rem}
+.tablewrap th{background:var(--ink);color:#fff}
+.tablewrap td.rest{color:var(--muted);font-style:italic}
+.msg{color:#a12a2a;font-weight:700}
+@media print{
+  header.site,footer.site,#cookie-banner,.no-print,.ad-slot,.crumbs{display:none!important}
+  body{background:#fff}
+  .tablewrap th{background:#222!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<header class="site"><div class="wrap">
+<a class="logo" href="index.html">Swot<span>Spot</span> ZA</a>
+<nav></nav>
+</div></header>
+
+<main class="wrap">
+<p class="crumbs"><a href="index.html">Home</a> / Study timetable generator</p>
+<h1>Study timetable generator</h1>
+<p class="no-print">Make a weekly study timetable in under a minute. Fill in the boxes, tap <strong>Make my timetable</strong>, then print it or save it as a PDF.</p>
+
+<form id="tt-form" class="tool no-print" novalidate>
+<label for="subjects">Your subjects (one per line or separated by commas)</label>
+<textarea id="subjects" rows="4" placeholder="Mathematics, Geography, English, Natural Sciences"></textarea>
+
+<label for="hard">Subjects you find hard (optional, they get extra sessions)</label>
+<input type="text" id="hard" placeholder="Mathematics">
+
+<label>Study days</label>
+<div class="days" id="days">
+<label><input type="checkbox" value="0" checked> Mon</label>
+<label><input type="checkbox" value="1" checked> Tue</label>
+<label><input type="checkbox" value="2" checked> Wed</label>
+<label><input type="checkbox" value="3" checked> Thu</label>
+<label><input type="checkbox" value="4" checked> Fri</label>
+<label><input type="checkbox" value="5"> Sat</label>
+<label><input type="checkbox" value="6"> Sun</label>
+</div>
+
+<div class="row">
+<div><label for="start">First session starts at</label><input type="time" id="start" value="16:00"></div>
+<div><label for="count">Sessions per day</label><input type="number" id="count" min="1" max="6" value="3"></div>
+</div>
+<div class="row">
+<div><label for="len">Session length (minutes)</label><input type="number" id="len" min="15" max="120" value="40"></div>
+<div><label for="brk">Break between sessions (minutes)</label><input type="number" id="brk" min="0" max="30" value="10"></div>
+</div>
+<p class="hint">A session of 30 to 45 minutes with a short break works well for most learners.</p>
+
+<button type="submit" class="btn">Make my timetable</button>
+<p id="tt-msg" class="msg" role="alert"></p>
+</form>
+
+<section id="tt-out" aria-live="polite"></section>
+
+<div class="no-print">
+<!-- AD SLOT 1: paste your AdSense unit here after approval -->
+<div class="ad-slot"><span class="ad-label">Advertisement</span></div>
+
+<h2>How to use your timetable</h2>
+<ul>
+<li>Print it or save it as a PDF, then stick it where you study.</li>
+<li>Tick each session off when it is done.</li>
+<li>In each session, use active methods such as testing yourself. See <a href="articles/how-to-study-effectively.html">How to study effectively</a>.</li>
+<li>Review the timetable once a week and adjust it to match your real life.</li>
+</ul>
+<p>Preparing for an exam? Read <a href="articles/how-to-prepare-for-an-exam.html">How to prepare for an exam</a> and <a href="articles/how-to-create-an-exam-study-timetable.html">How to create an exam study timetable</a>.</p>
+<p class="hint">Everything you type stays on your device. We do not store or send your timetable.</p>
+</div>
+</main>
+
+<footer class="site"><div class="wrap">
+<p><a href="about.html">About</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms</a></p>
+<p>SwotSpot ZA is an independent study site. It is not affiliated with the Department of Basic Education or the IEB.</p>
+</div></footer>
+
+<script>
+(function () {
+  var form = document.getElementById('tt-form');
+  var out = document.getElementById('tt-out');
+  var msg = document.getElementById('tt-msg');
+  var DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function fmt(mins) { return pad(Math.floor(mins / 60) % 24) + ':' + pad(mins % 60); }
+  function list(v) {
+    return v.split(/[,\n]/).map(function (s) { return s.trim(); }).filter(Boolean);
+  }
+  function num(id, min, max, fallback) {
+    var n = parseInt(document.getElementById(id).value, 10);
+    if (isNaN(n)) n = fallback;
+    return Math.max(min, Math.min(max, n));
+  }
+  function el(tag, text, cls) {
+    var e = document.createElement(tag);
+    if (text) e.textContent = text;
+    if (cls) e.className = cls;
+    return e;
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    msg.textContent = '';
+    out.textContent = '';
+
+    var subjects = list(document.getElementById('subjects').value).slice(0, 12);
+    var hard = list(document.getElementById('hard').value).slice(0, 6);
+    var chosen = {};
+    document.querySelectorAll('#days input:checked').forEach(function (c) { chosen[c.value] = true; });
+    var count = num('count', 1, 6, 3);
+    var len = num('len', 15, 120, 40);
+    var brk = num('brk', 0, 30, 10);
+    var t = document.getElementById('start').value || '16:00';
+    var start = parseInt(t.split(':')[0], 10) * 60 + parseInt(t.split(':')[1], 10);
+
+    if (!subjects.length) { msg.textContent = 'Please add at least one subject.'; return; }
+    if (!Object.keys(chosen).length) { msg.textContent = 'Please choose at least one study day.'; return; }
+
+    var pool = subjects.slice();
+    hard.forEach(function (h) { pool.push(h); });
+
+    var wrap = el('div', '', 'tablewrap');
+    var table = el('table');
+    var thead = el('thead');
+    var hr = el('tr');
+    hr.appendChild(el('th', 'Day'));
+    var times = [];
+    for (var s = 0; s < count; s++) {
+      var a = start + s * (len + brk);
+      times.push(fmt(a) + ' – ' + fmt(a + len));
+      hr.appendChild(el('th', times[s]));
+    }
+    thead.appendChild(hr);
+    table.appendChild(thead);
+
+    var tbody = el('tbody');
+    var idx = 0;
+    DAYS.forEach(function (name, d) {
+      var tr = el('tr');
+      tr.appendChild(el('td', name));
+      if (!chosen[d]) {
+        var rest = el('td', 'Rest day', 'rest');
+        rest.colSpan = count;
+        tr.appendChild(rest);
+      } else {
+        for (var k = 0; k < count; k++) {
+          tr.appendChild(el('td', pool[idx % pool.length]));
+          idx++;
+        }
+      }
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+
+    out.appendChild(el('h2', 'Your weekly study timetable'));
+    out.appendChild(wrap);
+
+    var actions = el('div', '', 'no-print');
+    var btn = el('button', 'Print or save as PDF', 'btn alt');
+    btn.type = 'button';
+    btn.onclick = function () { window.print(); };
+    actions.appendChild(btn);
+    actions.appendChild(el('p', 'In the print window, choose “Save as PDF” as the destination to download it.', 'hint'));
+    out.appendChild(actions);
+    out.appendChild(el('p', 'Made with SwotSpot ZA', 'hint'));
+  });
+})();
+</script>
+<script src="site.js" defer></script>
+</body>
+         </html>
